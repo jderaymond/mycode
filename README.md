@@ -1,4 +1,4 @@
-# mycode
+ mycode
 all my code from Alta3's Python course
 
 # mycode (Project Title)
@@ -23,4 +23,4 @@ What things are needed to install the software and how to install them. For now,
 
 ## Authors
 
-* **Your Name** - *Initial work* - [YourWebsite](https://example.com/)
+* Justin DeRaymond - *Initial work* - [YourWebsite](https://example.com/)
