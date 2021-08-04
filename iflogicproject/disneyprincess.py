@@ -64,7 +64,7 @@ while True:
         print(f"Try again {day} is not a valid day.")
         day = input("What day of the month were you born on?")
     
-military_branch = input("What branch of the military were you in? (Air Force, Army, Coast Guard, Marine Corps, Navy, None) ")
+military_branch = input("What branch of the military are/were you in? (Air Force, Army, Coast Guard, Marine Corps, Navy, None) ")
 while True:
 #after dealing with the days there should be 6  princesses left
     print()
