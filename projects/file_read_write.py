@@ -1,54 +1,42 @@
 #!/usr/local/bin/python3
 
-import pandas as pd 
+import pandas as pd
+import os
+#from doltpy.core import Dolt
+#import xlsxwriter
 
-from doltpy.core import Dolt
-
-url_base = 'https://raw.githubusercontent.com/guga31bb/nflfastR-data/master/'
-roster_path = 'roster-data/roster.csv.gz'
-
-repo = Dolt('.')
-
-# Start with rosters CSV
-rosters_url = url_base + roster_path
-rosters_df  = pd.read_csv(rosters_url,
-                          compression='gzip',
-                          low_memory=False)
+def main():
+    os.chdir('/home/student/mycode/projects/players/')
 
 
-#Grab the ID
-filter_col = [col for col in roster_df if col.startswith('nflId.')]
-ID_df = rosters_df[filter_col]
-ID_df = ID_df.rename(columns=lambda x: x.replace('nflId.', '')]
+    #Create an excel workbook
+    #workbook = xlsxwriter.Workbook('nfl_data.xlsx')
+    #Add a sheet to workbook
+    #worksheet = workbook.add_worksheet()
+
+    url_base = 'https://raw.githubusercontent.com/guga31bb/nflfastR-data/master/'
+    roster_path = 'roster-data/roster.csv.gz'
+
+    #repo = Dolt('.')
+    
+    # Start with rosters CSV
+    rosters_url = url_base + roster_path
+    rosters_df  = pd.read_csv(rosters_url,compression='gzip',low_memory=False)
 
 
+    #Grab the Season
+    filtercolumn = [col for col in roster_df if col.startswith('season.')]
+    season_df = rosters_df[filtercolumn]
+    season_df = season_df.rename(columns=lambda x: x.replace('season.', ''))
 
-# Grab the teams table from rosters dataframe
-filter_col = [col for col in rosters_df if col.startswith('team.')]
+    #Grab the jerseyNumber
+    filtercolumn = [col for col in roster_df if col.startswith('jerseyNumber.')]
+    jersey_df = rosters_df[filtercolumn]
+    jersey_df = jersey_df.rename(columns=lambda x: x.replace('jerseyNumber.', ''))
 
-teams_df = rosters_df[filter_col]
-teams_df = teams_df.drop_duplicates()
-teams_df = teams_df.rename(columns=lambda x: x.replace('team.', ''))
+    #Write to worksheet
+    worksheet.write('A', season_df)
+    worksheet.write('B', jersey_df)
 
-teams_csv_file = 'teams.csv'
-teams_pks = ['season', 'teamId']
-
-repo.import_df('teams', teams_df, teams_pks, 'update')
-
-# Grab the players table from the rosters dataframe
-filter_col = [col for col in rosters_df if col.startswith('teamPlayers.')]
-filter_col = filter_col + ['team.season', 'team.teamId']
-
-players_df = rosters_df[filter_col]
-players_df = players_df.rename(columns=lambda x: x.replace('team.', ''))
-players_df = players_df.rename(columns=lambda x: x.replace('teamPlayers.', ''))
-
-players_df['jerseyNumber'] = players_df['jerseyNumber'].fillna('')
-players_df['jerseyNumber'] = players_df['jerseyNumber'].astype(str)
-players_df['jerseyNumber'] = players_df['jerseyNumber'].str.split('.')
-players_df['jerseyNumber'] = players_df['jerseyNumber'].str[0]
-players_df['birthDate'] = pd.to_datetime(players_df['birthDate'])
-
-players_csv_file = 'players.csv'
-players_pks = ['season', 'teamId', 'nflId']
-repo.import_df('players', players_df, players_pks, 'update')                                                              
+if __name__ == "__main__":
+    main()
