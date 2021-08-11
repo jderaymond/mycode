@@ -17,8 +17,6 @@ def main():
             for question in data['results']:
                 questions.append(question['question'])
                 correct_answers.append(question['correct_answer'])
-                #possible_answers.append(question['incorrect_answers'])
-                #possible_answers.append(question['correct_answer'])
             break
         else:
             print(f'{difficulty} is not an option. Please select easy or medium')
